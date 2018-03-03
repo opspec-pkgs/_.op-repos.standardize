@@ -33,5 +33,5 @@ jq -r -c '.[]' /repoNames | while read i; do
   echo $i
   mkdir -p /srcDir/$i
   cd /srcDir/$i
-  opctl run /processItem
+  opctl run /standardize-repo
 done

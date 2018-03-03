@@ -41,7 +41,7 @@ run:
           githubAccessToken:
         dirs:
           /srcDir: $(srcDir)
-          /processItem:
+          /standardize-repo:
         files:
           /repoNames: $(repoNames)
           /cmd.sh:
