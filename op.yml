@@ -1,0 +1,48 @@
+name: github.com/opspec-pkgs/_.pkg-repos.standardize#1.0.0
+description: Internal pkg for opspec-pkgs/maintainers which iterates over, and standardizes, all pkg repos. 
+inputs:
+  githubUsername:
+    string:
+      constraints: { minLength: 1 }
+      description: github username to authenticate with
+  githubAccessToken:
+    string:
+      constraints: { minLength: 1 }
+      description: access token to authenticate with; see https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/
+      isSecret: true
+  org:
+    string:
+      constraints: { minLength: 1 }
+      description: name of org
+  srcDir:
+    dir:
+      default: ..
+run:
+  serial:
+    - op:
+        pkg: { ref: github.com/opspec-pkgs/github.organization.repos.list#1.0.0 }
+        inputs:
+          accessToken: $(githubAccessToken)
+          org:
+        outputs:
+          repos:
+    - container:
+        image: { ref: 'node:9.5.0-alpine' }
+        cmd: [node, /cmd.js]
+        files:
+          /cmd.js:
+          /repos: $(repos)
+          /repoNames: $(repoNames)
+    - container:
+        image: { ref: 'opctl/opctl:beta' }
+        cmd: [ /cmd.sh ]
+        envVars:
+          githubUsername:
+          githubAccessToken:
+        dirs:
+          /srcDir: $(srcDir)
+          /processItem:
+        files:
+          /repoNames: $(repoNames)
+          /cmd.sh:
+        workDir: /srcDir

@@ -1,0 +1,73 @@
+name: processItem
+inputs:
+  githubUsername:
+    string:
+      constraints: { minLength: 1 }
+      description: github username to authenticate with
+  githubAccessToken:
+    string:
+      constraints: { minLength: 1 }
+      description: github access token to authenticate with; see https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/
+      isSecret: true
+  repoName:
+    string:
+      constraints: { minLength: 1 }
+      description: name of repo
+  srcDir:
+    dir:
+      default: .
+outputs:
+  srcDir:
+    dir:
+      default: .
+run:
+  serial:
+    - op:
+        pkg: { ref: github.com/opspec-pkgs/git.clone-https#1.0.0 }
+        inputs:
+          username: $(githubUsername)
+          password: $(githubAccessToken)
+          url: https://github.com/opspec-pkgs/$(repoName).git
+        outputs:
+          repo:
+    - op:
+        pkg: { ref: github.com/opspec-pkgs/fs.cp-dir#2.0.0 }
+        inputs:
+          dst: $(srcDir)
+          src: $(repo)
+        outputs:
+          srcDir: dst
+    - op:
+        pkg: { ref: github.com/opspec-pkgs/_.pkg.bootstrap#1.0.0 }
+        inputs:
+          srcDir:
+        outputs:
+          srcDir:
+    - op:
+        pkg: { ref: github.com/opspec-pkgs/github.repo.branch.protection.set#1.0.0 }
+        inputs:
+          accessToken: $(githubAccessToken)
+          ownerName: opspec-pkgs
+          repoName:
+          branchName: master
+    - op:
+        pkg: { ref: github.com/opspec-pkgs/git.add-all#1.0.0 }
+        inputs:
+          repo: $(srcDir)
+        outputs:
+          srcDir: repo
+    - op:
+        pkg: { ref: github.com/opspec-pkgs/git.commit#1.0.0 }
+        inputs:
+          authorEmail: $(githubUsername)
+          authorName: Chris Dostert
+          message: chore) logos & standardization
+          dotGitDir: $(srcDir/.git)
+        outputs:
+          srcDir: repo
+    - op:
+        pkg: { ref: github.com/opspec-pkgs/git.push-https#1.0.1 }
+        inputs:
+            srcRepo: $(srcDir)
+            username: $(githubUsername)
+            password: $(githubAccessToken)
