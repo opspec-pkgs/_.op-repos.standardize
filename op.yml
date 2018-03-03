@@ -1,4 +1,4 @@
-name: github.com/opspec-pkgs/_.pkg-repos.standardize#1.0.0
+name: github.com/opspec-pkgs/_.pkg-repos.standardize
 description: Internal pkg for opspec-pkgs/maintainers which iterates over, and standardizes, all pkg repos. 
 inputs:
   githubUsername:

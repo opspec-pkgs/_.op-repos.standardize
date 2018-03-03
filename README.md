@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/opspec-pkgs/_.pkg-repos.standardize#1.0.0.svg?branch=master)](https://travis-ci.org/opspec-pkgs/_.pkg-repos.standardize#1.0.0)
+[![Build Status](https://travis-ci.org/opspec-pkgs/_.pkg-repos.standardize.svg?branch=master)](https://travis-ci.org/opspec-pkgs/_.pkg-repos.standardize)
 
 # Problem statement
 
@@ -13,20 +13,20 @@ this version of the pkg is in [![opspec 0.1.5](https://img.shields.io/badge/opsp
 ## Install
 
 ```shell
-opctl pkg install github.com/opspec-pkgs/_.pkg-repos.standardize#1.0.0#
+opctl pkg install github.com/opspec-pkgs/_.pkg-repos.standardize#
 ```
 
 ## Run
 
 ```
-opctl run github.com/opspec-pkgs/_.pkg-repos.standardize#1.0.0#
+opctl run github.com/opspec-pkgs/_.pkg-repos.standardize#
 ```
 
 ## Compose
 
 ```yaml
 op:
-  pkg: { ref: github.com/opspec-pkgs/_.pkg-repos.standardize#1.0.0# }
+  pkg: { ref: github.com/opspec-pkgs/_.pkg-repos.standardize# }
   inputs:
     githubUsername:
     githubAccessToken:
@@ -40,7 +40,7 @@ op:
 join us on
 [![Slack](https://opspec-slackin.herokuapp.com/badge.svg)](https://opspec-slackin.herokuapp.com/)
 or
-[open an issue](https://github.com/opspec-pkgs/_.pkg-repos.standardize#1.0.0/issues)
+[open an issue](https://github.com/opspec-pkgs/_.pkg-repos.standardize/issues)
 
 # Releases
 
