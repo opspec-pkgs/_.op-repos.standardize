@@ -13,24 +13,23 @@ this version of the pkg is in [![opspec 0.1.5](https://img.shields.io/badge/opsp
 ## Install
 
 ```shell
-opctl pkg install github.com/opspec-pkgs/_.pkg-repos.standardize#
+opctl pkg install github.com/opspec-pkgs/_.pkg-repos.standardize#1.0.0
 ```
 
 ## Run
 
 ```
-opctl run github.com/opspec-pkgs/_.pkg-repos.standardize#
+opctl run github.com/opspec-pkgs/_.pkg-repos.standardize#1.0.0
 ```
 
 ## Compose
 
 ```yaml
 op:
-  pkg: { ref: github.com/opspec-pkgs/_.pkg-repos.standardize# }
+  pkg: { ref: github.com/opspec-pkgs/_.pkg-repos.standardize#1.0.0 }
   inputs:
     githubUsername:
     githubAccessToken:
-    org:
     # params w/ default
     srcDir:
 ```

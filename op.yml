@@ -1,5 +1,6 @@
 name: github.com/opspec-pkgs/_.pkg-repos.standardize
-description: Internal pkg for opspec-pkgs/maintainers which iterates over, and standardizes, all pkg repos. 
+description: Internal pkg for opspec-pkgs/maintainers which iterates over, and standardizes, all pkg repos.
+version: 1.0.0
 inputs:
   githubUsername:
     string:
@@ -10,10 +11,6 @@ inputs:
       constraints: { minLength: 1 }
       description: access token to authenticate with; see https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/
       isSecret: true
-  org:
-    string:
-      constraints: { minLength: 1 }
-      description: name of org
   srcDir:
     dir:
       default: ..
@@ -23,7 +20,7 @@ run:
         pkg: { ref: github.com/opspec-pkgs/github.organization.repos.list#1.0.0 }
         inputs:
           accessToken: $(githubAccessToken)
-          org:
+          org: opspec-pkgs
         outputs:
           repos:
     - container:
