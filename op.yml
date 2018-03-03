@@ -2,10 +2,10 @@ name: github.com/opspec-pkgs/_.pkg-repos.standardize
 description: Internal pkg for opspec-pkgs/maintainers which iterates over, and standardizes, all pkg repos.
 version: 1.0.0
 inputs:
-  githubUsername:
+  githubEmailAddress:
     string:
       constraints: { minLength: 1 }
-      description: github username to authenticate with
+      description: github email address to authenticate with
   githubAccessToken:
     string:
       constraints: { minLength: 1 }
@@ -34,7 +34,7 @@ run:
         image: { ref: 'opctl/opctl:beta' }
         cmd: [ /cmd.sh ]
         envVars:
-          githubUsername:
+          githubEmailAddress:
           githubAccessToken:
         dirs:
           /srcDir: $(srcDir)
