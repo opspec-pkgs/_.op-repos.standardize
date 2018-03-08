@@ -28,6 +28,8 @@ opctl run github.com/opspec-pkgs/_.pkg-repos.standardize#1.0.0
 op:
   pkg: { ref: github.com/opspec-pkgs/_.pkg-repos.standardize#1.0.0 }
   inputs:
+    dockerUsername:
+    dockerPassword:
     githubEmailAddress:
     githubAccessToken:
     # params w/ default

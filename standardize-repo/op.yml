@@ -23,7 +23,7 @@ outputs:
 run:
   serial:
     - op:
-        pkg: { ref: github.com/opspec-pkgs/git.clone-https#1.0.0 }
+        pkg: { ref: github.com/opspec-pkgs/git.repo.clone-https#1.0.0 }
         inputs:
           username: $(githubEmailAddress)
           password: $(githubAccessToken)
@@ -61,12 +61,12 @@ run:
         inputs:
           authorEmail: $(githubEmailAddress)
           authorName: Chris Dostert
-          message: chore) logos & standardization
+          message: chore) opspec 0.1.6 support
           dotGitDir: $(srcDir/.git)
         outputs:
           srcDir: repo
     - op:
-        pkg: { ref: github.com/opspec-pkgs/git.push-https#1.0.1 }
+        pkg: { ref: github.com/opspec-pkgs/git.repo.push-https#1.0.1 }
         inputs:
             srcRepo: $(srcDir)
             username: $(githubEmailAddress)

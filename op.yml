@@ -2,6 +2,15 @@ name: github.com/opspec-pkgs/_.pkg-repos.standardize
 description: Internal pkg for opspec-pkgs/maintainers which iterates over, and standardizes, all pkg repos.
 version: 1.0.0
 inputs:
+  dockerUsername:
+    string:
+      constraints: { minLength: 1 }
+      description: user for logging in to docker hub
+  dockerPassword:
+    string:
+      constraints: { minLength: 1 }
+      description: password for logging in to docker hub
+      isSecret: true
   githubEmailAddress:
     string:
       constraints: { minLength: 1 }
@@ -31,11 +40,13 @@ run:
           /repos: $(repos)
           /repoNames: $(repoNames)
     - container:
-        image: { ref: 'opctl/opctl:beta' }
+        image: { ref: 'opctl/opctl:alpha' }
         cmd: [ /cmd.sh ]
         envVars:
           githubEmailAddress:
           githubAccessToken:
+          dockerUsername:
+          dockerPassword:
         dirs:
           /srcDir: $(srcDir)
           /standardize-repo:
