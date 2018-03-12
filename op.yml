@@ -32,13 +32,13 @@ run:
           org: opspec-pkgs
         outputs:
           repos:
-    - container:
-        image: { ref: 'node:9.5.0-alpine' }
-        cmd: [node, /cmd.js]
-        files:
-          /cmd.js:
-          /repos: $(repos)
-          /repoNames: $(repoNames)
+    - op:
+        pkg: { ref: github.com/opspec-pkgs/jmespath.query.evaluate#1.0.0 }
+        inputs:
+          data: $(repos)
+          query: '[*].name'
+        outputs:
+          repoNames: result
     - container:
         image: { ref: 'opctl/opctl:alpha' }
         cmd: [ /cmd.sh ]
