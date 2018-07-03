@@ -26,21 +26,21 @@ inputs:
 run:
   serial:
     - op:
-        pkg: { ref: github.com/opspec-pkgs/github.organization.repos.list#1.0.0 }
+        ref: github.com/opspec-pkgs/github.organization.repos.list#1.0.0
         inputs:
           accessToken: $(githubAccessToken)
           org: opspec-pkgs
         outputs:
           repos:
     - op:
-        pkg: { ref: github.com/opspec-pkgs/jmespath.query.evaluate#1.0.0 }
+        ref: github.com/opspec-pkgs/jmespath.query.evaluate#1.0.0
         inputs:
           data: $(repos)
           query: '[*].name'
         outputs:
           repoNames: result
     - container:
-        image: { ref: 'opctl/opctl:alpha' }
+        image: { ref: 'opctl/opctl:0.1.24' }
         cmd: [ /cmd.sh ]
         envVars:
           githubEmailAddress:

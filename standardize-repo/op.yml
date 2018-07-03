@@ -23,7 +23,7 @@ outputs:
 run:
   serial:
     - op:
-        pkg: { ref: github.com/opspec-pkgs/git.repo.clone-https#1.0.0 }
+        ref: github.com/opspec-pkgs/git.repo.clone-https#1.0.0
         inputs:
           username: $(githubEmailAddress)
           password: $(githubAccessToken)
@@ -31,43 +31,41 @@ run:
         outputs:
           repo:
     - op:
-        pkg: { ref: github.com/opspec-pkgs/fs.cp-dir#2.0.0 }
+        ref: github.com/opspec-pkgs/fs.cp-dir#2.0.0
         inputs:
           dst: $(srcDir)
           src: $(repo)
         outputs:
           srcDir: dst
     - op:
-        pkg: { ref: github.com/opspec-pkgs/_.op.bootstrap#2.0.1 }
+        ref: github.com/opspec-pkgs/_.op.bootstrap#2.0.1
         inputs:
           srcDir:
         outputs:
           srcDir:
     - op:
-        pkg: { ref: github.com/opspec-pkgs/github.repo.branch.protection.set#1.0.0 }
+        ref: github.com/opspec-pkgs/github.repo.branch.protection.set#1.0.0
         inputs:
           accessToken: $(githubAccessToken)
           ownerName: opspec-pkgs
           repoName:
           branchName: master
     - op:
-        pkg: { ref: github.com/opspec-pkgs/git.repo.stage-changes#1.1.0 }
+        ref: github.com/opspec-pkgs/git.repo.stage-changes#1.1.0
         inputs:
           pathSpec: .
           repo: $(srcDir)
         outputs:
           srcDir: repo
     - op:
-        pkg: { ref: github.com/opspec-pkgs/git.repo.commit-changes#1.1.0 }
+        ref: github.com/opspec-pkgs/git.repo.commit-changes#1.1.1
         inputs:
           authorEmail: $(githubEmailAddress)
           authorName: Chris Dostert
-          message: chore) opspec 0.1.6 support
+          message: chore) bootstrap w/ updated slack link
           dotGitDir: $(srcDir/.git)
-        outputs:
-          srcDir: repo
     - op:
-        pkg: { ref: github.com/opspec-pkgs/git.repo.push-https#1.1.0 }
+        ref: github.com/opspec-pkgs/git.repo.push-https#1.1.0
         inputs:
             srcRepo: $(srcDir)
             username: $(githubEmailAddress)
