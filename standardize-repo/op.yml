@@ -38,7 +38,7 @@ run:
         outputs:
           srcDir: dst
     - op:
-        pkg: { ref: github.com/opspec-pkgs/_.pkg.bootstrap#1.0.0 }
+        pkg: { ref: github.com/opspec-pkgs/_.op.bootstrap#2.0.1 }
         inputs:
           srcDir:
         outputs:
