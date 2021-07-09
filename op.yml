@@ -1,17 +1,16 @@
 name: github.com/opspec-pkgs/_.pkg-repos.standardize
 description: Internal pkg for opspec-pkgs/maintainers which iterates over, and standardizes, all pkg repos.
-version: 1.0.0
+version: 1.1.0
 inputs:
-  dockerUsername:
+  authorEmail:
     string:
       constraints: { minLength: 1 }
-      description: user for logging in to docker hub
-  dockerPassword:
+      description: email address to associate commits with
+  authorName:
     string:
       constraints: { minLength: 1 }
-      description: password for logging in to docker hub
-      isSecret: true
-  githubEmailAddress:
+      description: name to associate commits with
+  githubUsername:
     string:
       constraints: { minLength: 1 }
       description: github email address to authenticate with
@@ -20,9 +19,6 @@ inputs:
       constraints: { minLength: 1 }
       description: access token to authenticate with; see https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/
       isSecret: true
-  srcDir:
-    dir:
-      default: ..
 run:
   serial:
     - op:
@@ -36,21 +32,22 @@ run:
         ref: github.com/opspec-pkgs/jmespath.query.evaluate#1.0.0
         inputs:
           data: $(repos)
-          query: '[*].name'
+          query: "[*].{name: name, archived: archived}"
         outputs:
-          repoNames: result
-    - container:
-        image: { ref: 'opctl/opctl:0.1.24' }
-        cmd: [ /cmd.sh ]
-        envVars:
-          githubEmailAddress:
-          githubAccessToken:
-          dockerUsername:
-          dockerPassword:
-        dirs:
-          /srcDir: $(srcDir)
-          /standardize-repo:
-        files:
-          /repoNames: $(repoNames)
-          /cmd.sh:
-        workDir: /srcDir
+          result: $(repos)
+    - serialLoop:
+        range: $(repos)
+        vars:
+          value: $(repo)
+        run:
+          if:
+            - ne: [$(repo.archived), true]
+          op:
+            ref: ./standardize-repo
+            inputs:
+              authorEmail:
+              authorName:
+              githubUsername:
+              githubAccessToken:
+              repoName: $(repo.name)
+              cache: $(./cache)

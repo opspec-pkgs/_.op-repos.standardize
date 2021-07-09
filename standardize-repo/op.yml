@@ -1,6 +1,14 @@
 name: standardize-repo
 inputs:
-  githubEmailAddress:
+  authorEmail:
+    string:
+      constraints: { minLength: 1 }
+      description: email address to associate commits with
+  authorName:
+    string:
+      constraints: { minLength: 1 }
+      description: name to associate commits with
+  githubUsername:
     string:
       constraints: { minLength: 1 }
       description: github email address to authenticate with
@@ -13,60 +21,84 @@ inputs:
     string:
       constraints: { minLength: 1 }
       description: name of repo
-  srcDir:
+  cache:
     dir:
-      default: .
-outputs:
-  srcDir:
-    dir:
-      default: .
+      default: $(../)
 run:
   serial:
     - op:
         ref: github.com/opspec-pkgs/git.repo.clone-https#1.0.0
         inputs:
-          username: $(githubEmailAddress)
+          username: $(githubUsername)
           password: $(githubAccessToken)
           url: https://github.com/opspec-pkgs/$(repoName).git
         outputs:
           repo:
-    - op:
-        ref: github.com/opspec-pkgs/fs.cp-dir#2.0.0
-        inputs:
-          dst: $(srcDir)
-          src: $(repo)
-        outputs:
-          srcDir: dst
-    - op:
-        ref: github.com/opspec-pkgs/_.op.bootstrap#2.0.1
-        inputs:
-          srcDir:
-        outputs:
-          srcDir:
-    - op:
-        ref: github.com/opspec-pkgs/github.repo.branch.protection.set#1.0.0
-        inputs:
-          accessToken: $(githubAccessToken)
-          ownerName: opspec-pkgs
-          repoName:
-          branchName: master
-    - op:
-        ref: github.com/opspec-pkgs/git.repo.stage-changes#1.1.0
-        inputs:
-          pathSpec: .
-          repo: $(srcDir)
-        outputs:
-          srcDir: repo
-    - op:
-        ref: github.com/opspec-pkgs/git.repo.commit-changes#1.1.1
-        inputs:
-          authorEmail: $(githubEmailAddress)
-          authorName: Chris Dostert
-          message: chore) bootstrap w/ updated slack link
-          dotGitDir: $(srcDir/.git)
-    - op:
-        ref: github.com/opspec-pkgs/git.repo.push-https#1.1.0
-        inputs:
-            srcRepo: $(srcDir)
-            username: $(githubEmailAddress)
-            password: $(githubAccessToken)
+    - container:
+        image:
+          ref: alpine
+        cmd:
+          - sh
+          - -ce
+          - |
+            echo $(repoName)
+            cp -TR /repo /src/$(repoName)
+        dirs:
+          /src: $(cache)
+          /repo: $(repo)
+    - if:
+        - exists: $(cache/$(repoName)/op.yml)
+      name: apply updates to $(repoName)
+      serial:
+      - op:
+          ref: github.com/opspec-pkgs/_.op.bootstrap#4.0.1
+          inputs:
+            srcDir: $(cache/$(repoName))
+      - op:
+          ref: github.com/opspec-pkgs/github.repo.branch.protection.set#1.0.0
+          inputs:
+            accessToken: $(githubAccessToken)
+            ownerName: opspec-pkgs
+            repoName:
+            branchName: main
+      - op:
+          ref: github.com/opspec-pkgs/git.repo.stage-changes#1.1.0
+          inputs:
+            pathSpec: .
+            repo: $(cache/$(repoName))
+          outputs:
+            repo: $(cache/$(repoName))
+      - container:
+          image:
+            ref: alpine/git
+          cmd:
+            - sh
+            - -ce
+            - |
+              if [[ -n "\$(git status --porcelain)" ]]; then
+                echo -n true > /isModified
+              else
+                echo -n false > /isModified
+              fi
+          dirs:
+            /repo: $(cache/$(repoName))
+          files:
+            /isModified: $(isModified)
+          workDir: /repo
+      - name: push changes to $(repoName)
+        if:
+          - eq: [true, $(isModified)]
+        serial:
+        - op:
+            ref: github.com/opspec-pkgs/git.repo.commit-changes#1.1.1
+            inputs:
+              authorEmail:
+              authorName:
+              message: chore) Re-run bootstrap
+              dotGitDir: $(cache/$(repoName)/.git)
+        - op:
+            ref: github.com/opspec-pkgs/git.repo.push-https#1.1.0
+            inputs:
+                srcRepo: $(cache/$(repoName))
+                username: $(githubUsername)
+                password: $(githubAccessToken)
