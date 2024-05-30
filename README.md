@@ -9,27 +9,25 @@ Internal pkg for opspec-pkgs/maintainers which iterates over, and standardizes, 
 ## Visualize
 
 ```shell
-opctl ui github.com/opspec-pkgs/_.pkg-repos.standardize#1.0.0
+opctl ui github.com/opspec-pkgs/_.pkg-repos.standardize#1.1.0
 ```
 
 ## Run
 
 ```
-opctl run github.com/opspec-pkgs/_.pkg-repos.standardize#1.0.0
+opctl run github.com/opspec-pkgs/_.pkg-repos.standardize#1.1.0
 ```
 
 ## Compose
 
 ```yaml
 op:
-  ref: github.com/opspec-pkgs/_.pkg-repos.standardize#1.0.0
+  ref: github.com/opspec-pkgs/_.pkg-repos.standardize#1.1.0
   inputs:
-    dockerPassword:  # 👈 required; provide a value
-    dockerUsername:  # 👈 required; provide a value
+    authorEmail:  # 👈 required; provide a value
+    authorName:  # 👈 required; provide a value
     githubAccessToken:  # 👈 required; provide a value
-    githubEmailAddress:  # 👈 required; provide a value
-  ## uncomment to override defaults
-  #   srcDir: ..
+    githubUsername:  # 👈 required; provide a value
 ```
 
 # Support
