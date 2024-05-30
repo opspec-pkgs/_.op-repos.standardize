@@ -43,11 +43,11 @@ run:
           if:
             - ne: [$(repo.archived), true]
           op:
-            ref: ./standardize-repo
+            ref: $(./standardize-repo)
             inputs:
               authorEmail:
               authorName:
               githubUsername:
               githubAccessToken:
               repoName: $(repo.name)
-              cache: $(./cache)
+              cache: $(./standardize-repo/cache)

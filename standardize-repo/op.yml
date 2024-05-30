@@ -23,7 +23,7 @@ inputs:
       description: name of repo
   cache:
     dir:
-      default: $(../)
+      description: directory to cache repos in
 run:
   serial:
     - op:
